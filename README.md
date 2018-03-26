@@ -4,4 +4,7 @@ using Riot games' API.
 
 ## Configuration
 Add a `keys.py` file containing a single variable declaration : `riot_key`.
-    riot_key = "<your Riot API key here>"
+
+```python
+riot_key = "<your Riot API key here>"
+```
