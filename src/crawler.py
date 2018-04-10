@@ -2,6 +2,73 @@
 import os
 import json
 import requests
+import random
+
+metadata_names = [
+    'seasonId',
+    'queueId',
+    'gameVersion'
+]
+
+team_data_names = [
+    'firstDragon',
+    'firstInhibitor',
+    'baronKills',
+    'firstRiftHerald',
+    'firstBaron',
+    'riftHeraldKills',
+    'firstBlood',
+    'firstTower',
+    'inhibitorKills',
+    'towerKills',
+    'win',
+    'dragonKills'
+]
+
+player_data_names = [
+    'lane',
+    'role'
+]
+
+player_stats_names = [
+    'physicalDamageDealt',
+    'neutralMinionsKilledTeamJungle',
+    'magicDamageDealt',
+    'totalPlayerScore',
+    'deaths',
+    'win',
+    'neutralMinionsKilledEnemyJungle',
+    'totalDamageDealt',
+    'magicDamageDealtToChampions',
+    'damageDealtToObjectives',
+    'totalTimeCrowdControlDealt',
+    'longestTimeSpentLiving',
+    'firstTowerAssist',
+    'firstTowerKill',
+    'firstBloodAssist',
+    'turretKills',
+    'damageSelfMitigated',
+    'firstInhibitorKill',
+    'magicalDamageTaken',
+    'kills',
+    'trueDamageTaken',
+    'firstInhibitorAssist',
+    'assists',
+    'objectivePlayerScore',
+    'combatPlayerScore',
+    'damageDealtToTurrets',
+    'physicalDamageDealtToChampions',
+    'trueDamageDealt',
+    'trueDamageDealtToChampions',
+    'totalHeal',
+    'firstBloodKill',
+    'totalDamageDealtToChampions',
+    'totalUnitsHealed',
+    'inhibitorKills',
+    'totalDamageTaken',
+    'timeCCingOthers',
+    'physicalDamageTaken'
+]
 
 column_names = [
     'seasonId',
@@ -38,11 +105,11 @@ column_names = [
     'towerKills_team2',
     'win_team2',
     'dragonKills_team2',
-    'championIdBanTurn1_team2',
-    'championIdBanTurn2_team2',
-    'championIdBanTurn3_team2',
-    'championIdBanTurn4_team2',
-    'championIdBanTurn5_team2',
+    'championIdBanTurn6_team2',
+    'championIdBanTurn7_team2',
+    'championIdBanTurn8_team2',
+    'championIdBanTurn9_team2',
+    'championIdBanTurn10_team2',
 
     'championId_player1',
     'lane_player1',
@@ -57,7 +124,6 @@ column_names = [
     'totalDamageDealt_player1',
     'magicDamageDealtToChampions_player1',
     'damageDealtToObjectives_player1',
-    'teamObjective_player1',
     'totalTimeCrowdControlDealt_player1',
     'longestTimeSpentLiving_player1',
     'firstTowerAssist_player1',
@@ -99,7 +165,6 @@ column_names = [
     'totalDamageDealt_player2',
     'magicDamageDealtToChampions_player2',
     'damageDealtToObjectives_player2',
-    'teamObjective_player2',
     'totalTimeCrowdControlDealt_player2',
     'longestTimeSpentLiving_player2',
     'firstTowerAssist_player2',
@@ -141,7 +206,6 @@ column_names = [
     'totalDamageDealt_player3',
     'magicDamageDealtToChampions_player3',
     'damageDealtToObjectives_player3',
-    'teamObjective_player3',
     'totalTimeCrowdControlDealt_player3',
     'longestTimeSpentLiving_player3',
     'firstTowerAssist_player3',
@@ -183,7 +247,6 @@ column_names = [
     'totalDamageDealt_player4',
     'magicDamageDealtToChampions_player4',
     'damageDealtToObjectives_player4',
-    'teamObjective_player4',
     'totalTimeCrowdControlDealt_player4',
     'longestTimeSpentLiving_player4',
     'firstTowerAssist_player4',
@@ -225,7 +288,6 @@ column_names = [
     'totalDamageDealt_player5',
     'magicDamageDealtToChampions_player5',
     'damageDealtToObjectives_player5',
-    'teamObjective_player5',
     'totalTimeCrowdControlDealt_player5',
     'longestTimeSpentLiving_player5',
     'firstTowerAssist_player5',
@@ -267,7 +329,6 @@ column_names = [
     'totalDamageDealt_player6',
     'magicDamageDealtToChampions_player6',
     'damageDealtToObjectives_player6',
-    'teamObjective_player6',
     'totalTimeCrowdControlDealt_player6',
     'longestTimeSpentLiving_player6',
     'firstTowerAssist_player6',
@@ -309,7 +370,6 @@ column_names = [
     'totalDamageDealt_player7',
     'magicDamageDealtToChampions_player7',
     'damageDealtToObjectives_player7',
-    'teamObjective_player7',
     'totalTimeCrowdControlDealt_player7',
     'longestTimeSpentLiving_player7',
     'firstTowerAssist_player7',
@@ -351,7 +411,6 @@ column_names = [
     'totalDamageDealt_player8',
     'magicDamageDealtToChampions_player8',
     'damageDealtToObjectives_player8',
-    'teamObjective_player8',
     'totalTimeCrowdControlDealt_player8',
     'longestTimeSpentLiving_player8',
     'firstTowerAssist_player8',
@@ -393,7 +452,6 @@ column_names = [
     'totalDamageDealt_player9',
     'magicDamageDealtToChampions_player9',
     'damageDealtToObjectives_player9',
-    'teamObjective_player9',
     'totalTimeCrowdControlDealt_player9',
     'longestTimeSpentLiving_player9',
     'firstTowerAssist_player9',
@@ -435,7 +493,6 @@ column_names = [
     'totalDamageDealt_player10',
     'magicDamageDealtToChampions_player10',
     'damageDealtToObjectives_player10',
-    'teamObjective_player10',
     'totalTimeCrowdControlDealt_player10',
     'longestTimeSpentLiving_player10',
     'firstTowerAssist_player10',
@@ -464,18 +521,21 @@ column_names = [
     'timeCCingOthers_player10',
     'physicalDamageTaken_player10'
 ]
-riot_server = 'https://na1.api.riotgames.com'
 
 
 class LoLCrawler:
-    def __init__(self, riot_key: str):
+    def __init__(self,
+                 riot_key: str,
+                 riot_server: str = 'https://na1.api.riotgames.com'):
         """Default constructor
 
         :param riot_key:    A valid Riot Games API key.
+        :param riot_server: Riot server address.
         """
         self.__api_key = riot_key
+        self.__riot_server = riot_server
         self.__seen_matches = set()
-        self.__summoners_queue = list()
+        self.__summoners_set = set()
 
     def crawl(self, seed_summoner_id: int, queue: int = 420, season: int = 11,
               output_file=os.path.join('data', 'crawled-data.csv')):
@@ -499,10 +559,15 @@ class LoLCrawler:
             with open(output_file, mode='w') as output:
                 output.write(','.join(column_names) + '\n')
 
-        # Initialize summoners queue
-        self.__summoners_queue.insert(0, seed_summoner_id)
+        # Initialize summoners set
+        self.__summoners_set.add(seed_summoner_id)
 
         while True:
+            # Select random summoner ID from the summoners' set
+            curr_summoner_id = random.choice(list(self.__summoners_set))
+            self.__summoners_set.remove(curr_summoner_id)
+
+            # Get matches list for the current summoner
             params = {
                         "api_key": self.__api_key,
                         "queue": queue,
@@ -510,10 +575,79 @@ class LoLCrawler:
                         "beginIndex": 0,
                         "endIndex": 20
                      }
-            response = requests.get(riot_server
+            response = requests.get(self.__riot_server
                                     + '/lol/match/v3/matchlists/by-account/'
-                                    + str(seed_summoner_id),
+                                    + str(curr_summoner_id),
                                     params)
+            if not response.ok:
+                raise RuntimeError('Request failed with error code ' +
+                                   str(response.status_code))
 
-            matches = json.loads(response.text)
-            break
+            api_response = json.loads(response.text)
+
+            # Aggregate matches' ID
+            matches = set()
+            for i in range(0, min(api_response['totalGames'],
+                                  params['endIndex'])):
+                matches.add(api_response['matches'][i]['gameId'])
+
+            # Remove matches we've already seen to prevent duplicates
+            matches = matches - self.__seen_matches
+
+            # Fetch match data
+            for match_id in matches:
+                response = requests.get(self.__riot_server
+                                        + '/lol/match/v3/matches/'
+                                        + str(match_id),
+                                        {'api_key': self.__api_key})
+                if not response.ok:
+                    raise RuntimeError('Request failed with error code ' +
+                                       str(response.status_code))
+
+                json_data = json.loads(response.text)
+                new_data = list()
+
+                # Get match metadata
+                for metadata in metadata_names:
+                    new_data.append(json_data[metadata])
+
+                # Get both teams' statistics
+                for team_num in range(0, 2):
+                    for team_data in team_data_names:
+                        new_data.append(json_data['teams']
+                                        [team_num][team_data])
+
+                    # Get champion bans
+                    for ban in range(0, 5):
+                        new_data.append(json_data['teams']
+                                        [team_num]['bans'][ban]['championId'])
+
+                # Get each players' statistics
+                for player_num in range(0, 10):
+                    new_data.append(json_data['participants']
+                                    [player_num]['championId'])
+                    for player_data in player_data_names:
+                        new_data.append(json_data['participants']
+                                        [player_num]['timeline'][player_data])
+                    for player_stat in player_stats_names:
+                        stats = json_data['participants'][player_num]['stats']
+                        if player_stat in stats.keys():
+                            new_data.append(json_data['participants']
+                                            [player_num]['stats'][player_stat])
+                        else:
+                            new_data.append(-1)
+
+                # Add new data to the output file
+                fetched_data_string = ','.join([str(x) for x in new_data]) \
+                                      + '\n'
+                with open(output_file, mode='a') as output:
+                    output.write(fetched_data_string)
+
+                # Add match's summoners' ids to the set of summoners
+                for i in range(0, 10):
+                    summoner_id = json_data['participantIdentities'][i]['player']['accountId']
+                    if summoner_id != curr_summoner_id:
+                        self.__summoners_set.add(summoner_id)
+
+                # Add match_id to set of seen matches
+                self.__seen_matches.add(match_id)
